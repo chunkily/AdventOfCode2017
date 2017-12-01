@@ -7,6 +7,12 @@ namespace Day01
     {
         static void Main(string[] args)
         {
+            PartOne(args);
+            // PartTwo(args);
+        }
+
+        static void PartOne(string[] args)
+        {
             string filepath = args[0];
 
             int sum = 0;
@@ -30,6 +36,29 @@ namespace Day01
                 if (c == first)
                 {
                     sum += Int32.Parse(c.ToString());
+                }
+            }
+
+            Console.WriteLine(sum);
+            Console.ReadLine();
+
+        }
+
+        static void PartTwo(string[] args)
+        {
+            var input = File.ReadAllText(args[0]);
+
+            int offset = input.Length / 2;
+
+            int sum = 0;
+            for (int i = 0; i < offset; i++)
+            {
+                char c = input[i];
+                char next = input[i + offset];
+
+                if (c == next)
+                {
+                    sum += Int32.Parse(c.ToString()) * 2;
                 }
             }
 

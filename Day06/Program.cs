@@ -23,6 +23,7 @@ namespace Day06
                 list[i] = Int32.Parse(numStrings[i]);
             }
 
+            // PartTwo has been incorporated into PartOne
             // PartOne(testList);
             PartOne(list);
 
@@ -34,7 +35,7 @@ namespace Day06
             int banksCount = banks.Length;
             int numCycle = 0;
             var comparer = new ListComparer();
-            HashSet<int[]> seen = new HashSet<int[]>();
+            List<int[]> seen = new List<int[]>();
 
             while (!seen.Contains(banks, comparer))
             {
@@ -65,6 +66,9 @@ namespace Day06
             }
 
             Console.WriteLine(numCycle + " cycles required");
+            var prev = seen.FindIndex(b => comparer.Equals(b, banks));
+            Console.WriteLine("Pattern was previously seen at cycle " + prev);
+            Console.WriteLine("Infinite loop is " + (numCycle - prev) + " cycles long");
         }
     }
 

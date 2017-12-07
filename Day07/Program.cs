@@ -65,7 +65,7 @@ namespace Day07
                     // This is the new root
                     var oldRoot = root;
                     root = next;
-                    root.DiscProgs.Add(oldRoot);
+                    root.Attach(oldRoot);
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace Day07
                     var tip = root.FindTip(next.Name);
                     if (tip != null)
                     {
-                        tip.DiscProgs.Add(next);
+                        tip.Attach(next);
                     }
                     else
                     {
@@ -84,8 +84,14 @@ namespace Day07
             }
 
             // Attach the leaves
+            foreach (var leaf in leaves)
+            {
+                var tip = root.FindTip(leaf.Name);
+                tip.Attach(leaf);
+            }
 
             Console.WriteLine(root.Name + " is the root node");
+            root.ValidateWeights();
         }
     }
 
@@ -94,9 +100,11 @@ namespace Day07
         private string desc;
         public string Name { get; set; }
         public int Weight { get; set; }
+        public int TotalWeight { get; set; }
 
         public string[] Disc { get; set; }
         public List<Prog> DiscProgs { get; set; }
+        public Prog Parent { get; set; }
 
         public bool HasDisc
         {
@@ -115,6 +123,7 @@ namespace Day07
 
             Name = match.Groups[1].Value;
             Weight = Int32.Parse(match.Groups[2].Value);
+            TotalWeight = Weight;
             if (match.Groups[4].Success)
             {
                 Disc = match.Groups[4].Value.Replace(" ", "").Split(',');
@@ -134,7 +143,6 @@ namespace Day07
                         return this;
                     }
                 }
-
             }
 
             if (DiscProgs.Count > 0)
@@ -152,9 +160,84 @@ namespace Day07
             return null;
         }
 
+        public void Attach(Prog prog)
+        {
+            DiscProgs.Add(prog);
+            prog.Parent = this;
+            AddToTotalWeight(prog.TotalWeight);
+        }
+
+        public void AddToTotalWeight(int weight)
+        {
+            TotalWeight += weight;
+            if (Parent != null)
+            {
+                Parent.AddToTotalWeight(weight);
+            }
+
+        }
+
+        public bool HasBalancedDisc()
+        {
+            return this.HasDisc && this.DiscProgs.Select(p => p.TotalWeight).ToHashSet().Count() == 1;
+        }
+
+        public void ValidateWeights()
+        {
+            // Root will always have unbalanced weights.
+            // We need to find the single odd one out and drill down into it
+            // Until we get to a program that has completely balanced weights.
+            // That program will be the one that requires adjusting
+
+            if(this.HasBalancedDisc())
+            {
+                Console.WriteLine(Name + " has a balanced disk but it's parent has an unbalanced disk");
+
+                var otherTotal = Parent.DiscProgs.First(p => p.Name != Name).TotalWeight;
+
+                Console.WriteLine("You have to alter the weight of "+ Name + " to " + (otherTotal - TotalWeight + Weight )+ " to attain balance.");
+            }
+            else
+            {
+                // Drill down into the odd one out!
+                // ASSUME THAT WE WILL NEVER GET AN UNBALANCED DISC WITH LESS THAN 3 PROGRAMS
+                var first = DiscProgs[0].TotalWeight;
+                var second = DiscProgs[1].TotalWeight;
+                var third = DiscProgs[2].TotalWeight;
+
+                if (second == third && first != second)
+                {
+                    // First is odd one out
+                    DiscProgs[0].ValidateWeights();
+                }
+                else if(first == third && second != third)
+                {
+                    // Second is odd one
+                    DiscProgs[1].ValidateWeights();
+                }
+                else if(first == second && second != third)
+                {
+                    // third is odd one
+                    DiscProgs[2].ValidateWeights();
+                }
+                else
+                {
+                    // First 3 are the same
+                    for (int i = 3; i < DiscProgs.Count; i++)
+                    {
+                        if(DiscProgs[i].TotalWeight != first)
+                        {
+                            DiscProgs[i].ValidateWeights();
+                        }
+                    }
+                }
+            }
+        }
+
         public override string ToString()
         {
             return desc;
         }
+
     }
 }

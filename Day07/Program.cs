@@ -179,7 +179,7 @@ namespace Day07
 
         public bool HasBalancedDisc()
         {
-            return this.HasDisc && this.DiscProgs.Select(p => p.TotalWeight).ToHashSet().Count() == 1;
+            return this.HasDisc && this.DiscProgs.Select(p => p.TotalWeight).Distinct().Count() == 1;
         }
 
         public void ValidateWeights()

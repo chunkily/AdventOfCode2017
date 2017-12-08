@@ -82,13 +82,15 @@ namespace Day08
                 }
             }
 
-            Console.WriteLine("max value: " + registers.MaxValue());
+            Console.WriteLine("Current max value: " + registers.MaxCurrentValue());
+            Console.WriteLine("Max historical value: " + registers.MaxHistoricalValue());
         }
     }
 
     class Registers
     {
         Dictionary<string, int> dictionary = new Dictionary<string, int>();
+        int maxValue = 0;
 
         public int this[string register] 
         {
@@ -104,10 +106,20 @@ namespace Day08
             set
             {
                 dictionary[register] = value;
+
+                if(value > maxValue)
+                {
+                    maxValue = value;
+                }
             }
         }
 
-        public int MaxValue()
+        public int MaxHistoricalValue()
+        {
+            return maxValue;
+        }
+
+        public int MaxCurrentValue()
         {
             return dictionary.Select(kvp => kvp.Value).Max();
         }

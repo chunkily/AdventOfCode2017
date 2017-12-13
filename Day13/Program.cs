@@ -63,10 +63,10 @@ namespace Day13
                 {
                     var scanner = firewall[i++];
                     caught = scanner.DetectsPlayerAt(scanner.Depth + delay);
-                    if (caught)
-                    {
-                        Console.WriteLine("Leaving with a delay of " + delay + " would get you caught by scanner " + scanner.ToString());
-                    }
+                    //if (caught)
+                    //{
+                    //    Console.WriteLine("Leaving with a delay of " + delay + " would get you caught by scanner " + scanner.ToString());
+                    //}
                 }
             }
             Console.WriteLine("Leaving with a delay of " + delay + " would let you slip through.");

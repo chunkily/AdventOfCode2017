@@ -15,8 +15,8 @@ namespace Day14
             // PartOne("flqrgnkx");
             // PartOne(args[0]);
 
-            // PartTwo("flqrgnkx");
-            PartTwo(args[0]);
+            PartTwo("flqrgnkx");
+            // PartTwo(args[0]);
 
             Console.ReadLine();
         }
@@ -59,14 +59,13 @@ namespace Day14
                 }
             }
 
-            int groupId = 1;
+            int groupId = 0;
             while (usedSquares.Any(s => !s.Visited))
             {
                 usedSquares.First(s => !s.Visited).VisitAdjacent(usedSquares, groupId++);
             }
 
-            int groupCount = usedSquares.Select(s => s.GroupId).Distinct().Count();
-            Console.WriteLine("There are " + groupCount + " regions present.");
+            Console.WriteLine("There are " + groupId + " regions present.");
         }
     }
 
@@ -76,6 +75,7 @@ namespace Day14
         {
             Row = row;
             Col = col;
+            GroupId = -1;
         }
 
         public int Row { get; }
@@ -85,7 +85,7 @@ namespace Day14
         {
             get
             {
-                return GroupId != 0;
+                return GroupId != -1;
             }
         }
 

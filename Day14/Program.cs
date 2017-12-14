@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using System.Text;
 
 namespace Day14
@@ -7,15 +9,38 @@ namespace Day14
     {
         static void Main(string[] args)
         {
-            int[,] grid = new int[128, 128];
-
+            // PartOne("flqrgnkx");
+            // Usage dotnet run -- flqrgnkx
+            PartOne(args[0]);
             Console.ReadLine();
+        }
+
+        static void PartOne(string input)
+        {
+            //for (int j = 0; j < 8; j++)
+            //{
+            //    var ba = KnotHash.HashAsBoolArr(input + "-" + j);
+            //    for (int i = 0; i < 8; i++)
+            //    {
+            //        Console.Write(ba[i] ? '#' : '.');
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            int numUsed = 0;
+            for (int j = 0; j < 128; j++)
+            {
+                var ba = KnotHash.HashAsBoolArr(input + "-" + j);
+                // Count number of trues, and add to total
+                numUsed += ba.Count(b => b);
+            }
+            Console.WriteLine(numUsed + " squares are used");
         }
     }
 
     class KnotHash
     {
-        public static string Hash(string input)
+        private static int[] GetDenseHash(string input)
         {
             int[] lengths = new int[input.Length + 5];
             for (int i = 0; i < input.Length; i++)
@@ -31,7 +56,6 @@ namespace Day14
                 arr[i] = i;
             }
 
-            // var circularArray = new CircularArray(256);
             int currentPosition = 0;
             int skipSize = 0;
 
@@ -60,8 +84,6 @@ namespace Day14
                 }
             }
 
-            StringBuilder sb = new StringBuilder();
-
             int[] denseHash = new int[16];
 
             for (int i = 0; i < denseHash.Length; i++)
@@ -74,12 +96,55 @@ namespace Day14
                 }
             }
 
-            foreach (var i in denseHash)
+            return denseHash;
+        }
+        public static string Hash(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (int i in GetDenseHash(input))
             {
                 sb.AppendFormat("{0:x2}", i);
             }
 
             return sb.ToString();
+        }
+
+
+        public static bool[] HashAsBoolArr(string input)
+        {
+            var denseHash = GetDenseHash(input);
+            bool[] boolArr = new bool[128];
+            int i = 0;
+            foreach (int j in denseHash)
+            {
+                boolArr[i++] = (j & 128) != 0;
+                boolArr[i++] = (j & 64) != 0;
+                boolArr[i++] = (j & 32) != 0;
+                boolArr[i++] = (j & 16) != 0;
+                boolArr[i++] = (j & 8) != 0;
+                boolArr[i++] = (j & 4) != 0;
+                boolArr[i++] = (j & 2) != 0;
+                boolArr[i++] = (j & 1) != 0;
+            }
+
+            return boolArr;
+
+            //var hash = Hash(input);
+            //bool[] boolArr = new bool[128];
+            //var i = 0;
+
+            //foreach (char c in hash)
+            //{
+            //    var j = Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
+            //    // high bit first
+            //    boolArr[i++] = (j & 8) != 0;
+            //    boolArr[i++] = (j & 4) != 0;
+            //    boolArr[i++] = (j & 2) != 0;
+            //    boolArr[i++] = (j & 1) != 0;
+            //}
+
+            //return boolArr;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -9,9 +10,14 @@ namespace Day14
     {
         static void Main(string[] args)
         {
-            // PartOne("flqrgnkx");
             // Usage dotnet run -- flqrgnkx
-            PartOne(args[0]);
+
+            // PartOne("flqrgnkx");
+            // PartOne(args[0]);
+
+            // PartTwo("flqrgnkx");
+            PartTwo(args[0]);
+
             Console.ReadLine();
         }
 
@@ -35,6 +41,66 @@ namespace Day14
                 numUsed += ba.Count(b => b);
             }
             Console.WriteLine(numUsed + " squares are used");
+        }
+
+        static void PartTwo(string input)
+        {
+            var usedSquares = new List<UsedGridCell>();
+
+            for (int j = 0; j < 128; j++)
+            {
+                var ba = KnotHash.HashAsBoolArr(input + "-" + j);
+                for (int i = 0; i < 128; i++)
+                {
+                    if (ba[i])
+                    {
+                        usedSquares.Add(new UsedGridCell(j, i));
+                    }
+                }
+            }
+
+            int groupId = 1;
+            while (usedSquares.Any(s => !s.Visited))
+            {
+                usedSquares.First(s => !s.Visited).VisitAdjacent(usedSquares, groupId++);
+            }
+
+            int groupCount = usedSquares.Select(s => s.GroupId).Distinct().Count();
+            Console.WriteLine("There are " + groupCount + " regions present.");
+        }
+    }
+
+    class UsedGridCell
+    {
+        public UsedGridCell(int row, int col)
+        {
+            Row = row;
+            Col = col;
+        }
+
+        public int Row { get; }
+        public int Col { get; }
+        public int GroupId { get; set; }
+        public bool Visited
+        {
+            get
+            {
+                return GroupId != 0;
+            }
+        }
+
+        public void VisitAdjacent(List<UsedGridCell> list, int groupId)
+        {
+            if (Visited)
+            {
+                // Already visited
+                return;
+            }
+            GroupId = groupId;
+            list.Find(c => c.Row == Row - 1 && c.Col == Col)?.VisitAdjacent(list, groupId);
+            list.Find(c => c.Row == Row + 1 && c.Col == Col)?.VisitAdjacent(list, groupId);
+            list.Find(c => c.Row == Row && c.Col == Col - 1)?.VisitAdjacent(list, groupId);
+            list.Find(c => c.Row == Row && c.Col == Col + 1)?.VisitAdjacent(list, groupId);
         }
     }
 
@@ -129,22 +195,6 @@ namespace Day14
             }
 
             return boolArr;
-
-            //var hash = Hash(input);
-            //bool[] boolArr = new bool[128];
-            //var i = 0;
-
-            //foreach (char c in hash)
-            //{
-            //    var j = Int32.Parse(c.ToString(), System.Globalization.NumberStyles.HexNumber);
-            //    // high bit first
-            //    boolArr[i++] = (j & 8) != 0;
-            //    boolArr[i++] = (j & 4) != 0;
-            //    boolArr[i++] = (j & 2) != 0;
-            //    boolArr[i++] = (j & 1) != 0;
-            //}
-
-            //return boolArr;
         }
     }
 }

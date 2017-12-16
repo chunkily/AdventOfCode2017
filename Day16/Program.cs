@@ -38,67 +38,78 @@ namespace Day16
             {
                 stage.ParseInstruction(instruction);
             }
-
+            stage.RepeatDance();
             Console.WriteLine(stage);
         }
 
         static void PartTwo(string[] instructions, Stage stage, int numTimes)
         {
-            string initial = stage.ToString();
             foreach (var instruction in instructions)
             {
                 stage.ParseInstruction(instruction);
             }
-            string final = stage.ToString();
 
-            for (int i = 1; i < numTimes; i++)
+            string initial = stage.ToString();
+            stage.RepeatDance();
+            int numCycles = 1;
+
+            while(stage.ToString() != initial)
             {
                 stage.RepeatDance();
-
-                if (i % 10_000_000 == 0)
-                {
-                    Console.WriteLine("Working... " + (i / 10_000_000) + "%");
-                }
+                numCycles++;
             }
+
+            Console.WriteLine("The dance repeats itself every " + numCycles + " cycles");
+
+            int numRepeat = numTimes % numCycles;
+            for (int i = 0; i < numRepeat; i++)
+            {
+                stage.RepeatDance();
+            }
+
+            Console.WriteLine("The dancers will be in the following order after " + numTimes + " cycles");
             Console.WriteLine(stage);
         }
     }
 
     class Stage
     {
-        private List<char> dancers;
+        private char[] dancers;
         int size;
 
         static Regex SpinRegex = new Regex(@"^s([0-9]+)$");
         static Regex ExchangeRegex = new Regex(@"^x([0-9]+)/([0-9]+)$");
         static Regex PartnerRegex = new Regex(@"^p([a-p]+)/([a-p]+)$");
 
-        Action a;
+        List<Action> moves;
 
         public Stage(int size)
         {
             this.size = size;
-            dancers = new List<char>(size);
+            dancers = new char[size];
             char dancer = 'a';
             for (int i = 0; i < size; i++)
             {
-                dancers.Add(dancer++);
+                dancers[i] = dancer++;
             }
+            moves = new List<Action>();
         }
 
         public void RepeatDance()
         {
-            a();
+            foreach (var move in moves)
+            {
+                move();
+            }
         }
 
         public void ParseInstruction(string instruction)
         {
             var sMatch = SpinRegex.Match(instruction);
-            if(sMatch.Success)
+            if (sMatch.Success)
             {
                 int val = Int32.Parse(sMatch.Groups[1].Value);
-                Spin(val);
-                a += () => { Spin(val); };
+                moves.Add(() => { Spin(val); });
                 return;
             }
             var eMatch = ExchangeRegex.Match(instruction);
@@ -106,17 +117,15 @@ namespace Day16
             {
                 int pos1 = Int32.Parse(eMatch.Groups[1].Value);
                 int pos2 = Int32.Parse(eMatch.Groups[2].Value);
-                Exchange(pos1, pos2);
-                a += () => { Exchange(pos1, pos2); };
+                moves.Add(() => { Exchange(pos1, pos2); });
                 return;
             }
             var pMatch = PartnerRegex.Match(instruction);
-            if(pMatch.Success)
+            if (pMatch.Success)
             {
                 char c1 = pMatch.Groups[1].Value[0];
                 char c2 = pMatch.Groups[2].Value[0];
-                Partner(c1, c2);
-                a += () => { Partner(c1, c2); };
+                moves.Add(() => { Partner(c1, c2); });
                 return;
             }
             throw new Exception("Unhandled instruction " + instruction);
@@ -126,7 +135,7 @@ namespace Day16
         {
             char[] copy = new char[size];
             dancers.CopyTo(copy, 0);
-            for (int i = 0; i < dancers.Count; i++)
+            for (int i = 0; i < dancers.Length; i++)
             {
                 dancers[(i + num) % size] = copy[i];
             }
@@ -141,14 +150,26 @@ namespace Day16
 
         public void Partner(char dancer1, char dancer2)
         {
-            var pos1 = dancers.IndexOf(dancer1);
-            var pos2 = dancers.IndexOf(dancer2);
+            int pos1 = -1;
+            int pos2 = -1;
+            for (int i = 0; pos1 < 0 || pos2 < 0; i++)
+            {
+                var c = dancers[i];
+                if (c == dancer1)
+                {
+                    pos1 = i;
+                }
+                else if (c == dancer2)
+                {
+                    pos2 = i;
+                }
+            }
             Exchange(pos1, pos2);
         }
 
         public override string ToString()
         {
-            return new String(dancers.ToArray());
+            return new String(dancers);
         }
     }
 }

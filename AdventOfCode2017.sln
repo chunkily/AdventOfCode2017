@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day01", "Day01\Day01.csproj", "{38E4E143-AD0E-47C2-89AB-CA540079AF82}"
 EndProject
@@ -25,13 +25,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day10", "Day10\Day10.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day11", "Day11\Day11.csproj", "{64D68E73-E5EE-4864-8CAA-4C331990DA34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day12", "Day12\Day12.csproj", "{2FFB3675-5E67-4940-AB16-84177BE917AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day12", "Day12\Day12.csproj", "{2FFB3675-5E67-4940-AB16-84177BE917AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day13", "Day13\Day13.csproj", "{7F0EDEC4-19D3-491B-BEB5-CCB81948DB39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day14", "Day14\Day14.csproj", "{D13415CA-8301-464B-BA8A-E008B0EA98A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day15", "Day15\Day15.csproj", "{2F52AED4-FC67-4221-9651-4D639892A2DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day15", "Day15\Day15.csproj", "{2F52AED4-FC67-4221-9651-4D639892A2DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day16", "Day16\Day16.csproj", "{ACB75CA1-D6C0-40DC-B31F-6BFDEBD0AB29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{2F52AED4-FC67-4221-9651-4D639892A2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F52AED4-FC67-4221-9651-4D639892A2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F52AED4-FC67-4221-9651-4D639892A2DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACB75CA1-D6C0-40DC-B31F-6BFDEBD0AB29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB75CA1-D6C0-40DC-B31F-6BFDEBD0AB29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB75CA1-D6C0-40DC-B31F-6BFDEBD0AB29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB75CA1-D6C0-40DC-B31F-6BFDEBD0AB29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

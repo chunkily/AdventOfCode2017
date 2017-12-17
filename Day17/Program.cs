@@ -53,7 +53,7 @@ namespace Day17
         {
             var spinlock = new AngrySpinLock(input);
 
-            for (int i = 0; i < 50_000_000; i++)
+            for (int i = 1; i < 50_000_000; i++)
             {
                 spinlock.Next();
 

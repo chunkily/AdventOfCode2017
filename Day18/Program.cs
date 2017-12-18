@@ -35,12 +35,12 @@ namespace Day18
 
     class Registers
     {
-        Dictionary<char, int> registers = new Dictionary<char, int>();
+        Dictionary<char, long> registers = new Dictionary<char, long>();
 
-        List<Func<int?>> instructions = new List<Func<int?>>();
+        List<Func<long?>> instructions = new List<Func<long?>>();
 
         private const int initialValue = 0;
-        private int lastPlayed = 0;
+        private long lastPlayed = 0;
         private int currentLine = 0;
 
         private static readonly Regex regex = new Regex(@"^([a-z]{3}) (-?[a-z0-9]+) ?(-?[a-z0-9]+)?$");
@@ -50,7 +50,7 @@ namespace Day18
         {
             foreach (var line in input)
             {
-                Console.Write(line + ":");
+                // Console.Write(line + ":");
                 var match = regex.Match(line);
 
                 string opr = match.Groups[1].Value;
@@ -96,72 +96,72 @@ namespace Day18
                     case "snd":
                         if (xIsChar)
                         {
-                            Console.WriteLine($"snd {xChar}");
-                            instructions.Add(() => PlaySound(GetValue(xChar)));
+                            //Console.WriteLine($"snd {xChar}");
+                            instructions.Add(() => PlaySound(xChar));
                         }
                         else
                         {
-                            Console.WriteLine($"snd {xNum}");
+                            //Console.WriteLine($"snd {xNum}");
                             instructions.Add(() => PlaySound(xNum));
                         }
                         break;
                     case "set":
                         if (yIsChar)
                         {
-                            Console.WriteLine($"set {xChar} {yChar}");
-                            instructions.Add(() => SetValue(xChar, GetValue(yChar)));
+                            //Console.WriteLine($"set {xChar} {yChar}");
+                            instructions.Add(() => SetValue(xChar, yChar));
                         }
                         else
                         {
-                            Console.WriteLine($"set {xChar} {yNum}");
+                            //Console.WriteLine($"set {xChar} {yNum}");
                             instructions.Add(() => SetValue(xChar, yNum));
                         }
                         break;
                     case "add":
                         if (yIsChar)
                         {
-                            Console.WriteLine($"add {xChar} {yChar}");
-                            instructions.Add(() => AddValue(xChar, GetValue(yChar)));
+                            //Console.WriteLine($"add {xChar} {yChar}");
+                            instructions.Add(() => AddValue(xChar, yChar));
                         }
                         else
                         {
-                            Console.WriteLine($"add {xChar} {yNum}");
+                            //Console.WriteLine($"add {xChar} {yNum}");
                             instructions.Add(() => AddValue(xChar, yNum));
                         }
                         break;
                     case "mul":
                         if (yIsChar)
                         {
-                            Console.WriteLine($"mul {xChar} {yChar}");
-                            instructions.Add(() => MultiplyValue(xChar, GetValue(yChar)));
+                            //Console.WriteLine($"mul {xChar} {yChar}");
+                            instructions.Add(() => MultiplyValue(xChar, yChar));
                         }
                         else
                         {
-                            Console.WriteLine($"mul {xChar} {yNum}");
+                            //Console.WriteLine($"mul {xChar} {yNum}");
                             instructions.Add(() => MultiplyValue(xChar, yNum));
                         }
                         break;
                     case "mod":
                         if (yIsChar)
                         {
-                            Console.WriteLine($"mod {xChar} {yChar}");
-                            instructions.Add(() => ModValue(xChar, GetValue(yChar)));
+                            //Console.WriteLine($"mod {xChar} {yChar}");
+                            instructions.Add(() => ModValue(xChar, yChar));
                         }
                         else
                         {
-                            Console.WriteLine($"mod {xChar} {yNum}");
+                            //Console.WriteLine($"mod {xChar} {yNum}");
                             instructions.Add(() => ModValue(xChar, yNum));
                         }
                         break;
                     case "rcv":
                         if (xIsChar)
                         {
-                            Console.WriteLine($"rcv {xChar}");
-                            instructions.Add(() => Recover(GetValue(xChar)));
+                            //Console.WriteLine($"rcv {xChar}");
+                            instructions.Add(() => Recover(xChar));
                         }
                         else
                         {
-                            Console.WriteLine($"rcv {xNum}");
+                            //Console.WriteLine($"rcv {xNum}");
                             instructions.Add(() => Recover(xNum));
                         }
                         break;
@@ -170,18 +170,18 @@ namespace Day18
                         {
                             if (xIsChar)
                             {
-                                Console.WriteLine($"jgz {xChar} {yChar}");
+                                //Console.WriteLine($"jgz {xChar} {yChar}");
                                 instructions.Add(() =>
                                 {
-                                    return JumpGZ(GetValue(xChar), GetValue(yChar));
+                                    return JumpGZ(xChar, yChar);
                                 });
                             }
                             else
                             {
-                                Console.WriteLine($"jgz {xNum} {yChar}");
+                                //Console.WriteLine($"jgz {xNum} {yChar}");
                                 instructions.Add(() =>
                                 {
-                                    return JumpGZ(xNum, GetValue(yChar));
+                                    return JumpGZ(xNum, yChar);
                                 });
                             }
                         }
@@ -189,15 +189,15 @@ namespace Day18
                         {
                             if (xIsChar)
                             {
-                                Console.WriteLine($"jgz {xChar} {yNum}");
+                                //Console.WriteLine($"jgz {xChar} {yNum}");
                                 instructions.Add(() =>
                                 {
-                                    return JumpGZ(GetValue(xChar), yNum);
+                                    return JumpGZ(xChar, yNum);
                                 });
                             }
                             else
                             {
-                                Console.WriteLine($"jgz {xNum} {yNum}");
+                                //Console.WriteLine($"jgz {xNum} {yNum}");
                                 instructions.Add(() =>
                                 {
                                     return JumpGZ(xNum, yNum);
@@ -213,14 +213,14 @@ namespace Day18
 
         public void Run()
         {
-            int? rec = null;
+            long? rec = null;
             while (rec == null)
             {
                 rec = instructions[currentLine++]();
             }
             Console.WriteLine(rec);
         }
-        public int GetValue(char x)
+        public long GetValue(char x)
         {
             if (registers.ContainsKey(x))
             {
@@ -232,37 +232,59 @@ namespace Day18
             }
         }
 
-        public int? PlaySound(int x)
+        public int? PlaySound(char x)
+        {
+            return PlaySound(GetValue(x));
+        }
+
+        public int? PlaySound(long x)
         {
             lastPlayed = x;
             return null;
         }
 
-        public int? SetValue(char x, int y)
+        public int? SetValue(char x, long y)
         {
             registers[x] = y;
             return null;
         }
 
-        public int? AddValue(char x, int y)
+        public int? SetValue(char x, char y)
         {
-            int v = GetValue(x);
-            return SetValue(x, v + y);
+            return SetValue(x, GetValue(y));
         }
 
-        public int? MultiplyValue(char x, int y)
+        public int? AddValue(char x, long y)
         {
-            int v = GetValue(x);
-            return SetValue(x, v * y);
+            return SetValue(x, checked(GetValue(x) + y));
         }
 
-        public int? ModValue(char x, int y)
+        public int? AddValue(char x, char y)
         {
-            int v = GetValue(x);
-            return SetValue(x, v % y);
+            return AddValue(x, GetValue(y));
         }
 
-        public int? Recover(int x)
+        public int? MultiplyValue(char x, long y)
+        {
+            return SetValue(x, checked(GetValue(x) * y));
+        }
+
+        public int? MultiplyValue(char x, char y)
+        {
+            return MultiplyValue(x, GetValue(y));
+        }
+
+        public int? ModValue(char x, long y)
+        {
+            return SetValue(x, GetValue(x) % y);
+        }
+
+        public long? ModValue(char x, char y)
+        {
+            return ModValue(x, GetValue(y));
+        }
+
+        public long? Recover(long x)
         {
             if (x != 0)
             {
@@ -274,14 +296,42 @@ namespace Day18
             }
         }
 
-        public int? JumpGZ(int x, int y)
+        public long? Recover(char x)
+        {
+            return Recover(GetValue(x));
+        }
+
+        public long? JumpGZ(long x, long y)
         {
             if (x > 0)
             {
-                currentLine = currentLine + y - 1;
+                if (y > Int32.MaxValue)
+                {
+                    throw new InvalidOperationException("y is larger than integer");
+                }
+
+                checked
+                {
+                    currentLine = currentLine + (int)y - 1;
+                }
             }
 
             return null;
+        }
+
+        public long? JumpGZ(char x, long y)
+        {
+            return JumpGZ(GetValue(x), y);
+        }
+
+        public long? JumpGZ(long x, char y)
+        {
+            return JumpGZ(x, GetValue(y));
+        }
+
+        public long? JumpGZ(char x, char y)
+        {
+            return JumpGZ(GetValue(x), GetValue(y));
         }
     }
 }

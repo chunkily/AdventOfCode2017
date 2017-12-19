@@ -17,7 +17,18 @@ namespace Day19
             //    "     +B-+  +--+ ",
             //    "                "
             //});
-            PartOne(File.ReadAllLines("input.txt"));
+            //PartOne(File.ReadAllLines("input.txt"));
+
+            //PartTwo(new string[] {
+            //    "     |          ",
+            //    "     |  +--+    ",
+            //    "     A  |  C    ",
+            //    " F---|----E|--+ ",
+            //    "     |  |  |  D ",
+            //    "     +B-+  +--+ ",
+            //    "                "
+            //});
+            PartTwo(File.ReadAllLines("input.txt"));
 
             Console.ReadLine();
         }
@@ -32,6 +43,20 @@ namespace Day19
             }
 
             Console.WriteLine(grid.Output);
+        }
+
+        static void PartTwo(string[] input)
+        {
+            var grid = new Grid(input);
+            grid.FindStartPoint();
+
+            int count = 1;
+            while (grid.Walk())
+            {
+                count++;
+            }
+
+            Console.WriteLine(count);
         }
     }
 

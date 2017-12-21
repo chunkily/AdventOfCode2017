@@ -14,11 +14,22 @@ namespace Day21
             //    "../.# => ##./#../...",
             //    ".#./..#/### => #..#/..../..../#..#"
             //});
-            PartOne(File.ReadAllLines("input.txt"));
+            //PartOne(File.ReadAllLines("input.txt"));
+            PartTwo(File.ReadAllLines("input.txt"));
             Console.ReadLine();
         }
 
-        static void PartOne(string[] inputs)
+        static void PartOne(string[] input)
+        {
+            Solve(input, 5);
+        }
+
+        static void PartTwo(string[] input)
+        {
+            Solve(input, 18);
+        }
+
+        static void Solve(string[] inputs, int numIterations)
         {
             // Rules are indexed by the number of trues in the input
             List<List<Transformation>> rules2 = new List<List<Transformation>>();
@@ -50,7 +61,7 @@ namespace Day21
             Grid grid = new Grid();
             grid.Update(new char[] { '.', '#', '.', '.', '.', '#', '#', '#', '#' }, 3);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < numIterations; i++)
             {
                 var s = grid.Split();
                 foreach (var row in s)

@@ -53,9 +53,7 @@ namespace Day22
 
     class Grid
     {
-        static readonly NodeComparer comparer = new NodeComparer();
-
-        SortedList<Node, Node> nodes = new SortedList<Node, Node>(comparer);
+        Dictionary<ValueTuple<int, int>, Node> nodes = new Dictionary<ValueTuple<int, int>, Node>();
 
         public Grid(string[] input)
         {
@@ -69,44 +67,24 @@ namespace Day22
                 {
                     char c = row[x];
                     var node = new Node(x - offsetX, y - offsetY, c == '#');
-                    nodes.Add(node, node);
+                    nodes.Add(new ValueTuple<int, int>(node.X, node.Y), node);
                 }
             }
         }
 
         public Node GetNode(int x, int y)
         {
-            var i = nodes.IndexOfKey(new Node(x, y, false));
-
-            if (i < 0)
+            var key = new ValueTuple<int, int>(x, y);
+            if (nodes.ContainsKey(key))
             {
-                var newNode = new Node(x, y, false);
-                nodes.Add(newNode, newNode);
-                return newNode;
-            }
-
-            return nodes.Values[i];
-        }
-    }
-
-    class NodeComparer : IComparer<Node>
-    {
-        public int Compare(Node node1, Node node2)
-        {
-            var x = node1.X.CompareTo(node2.X);
-            if (x != 0)
-            {
-                return x;
+                return nodes[key];
             }
             else
             {
-                return node1.Y.CompareTo(node2.Y);
+                var newNode = new Node(x, y, false);
+                nodes.Add(new ValueTuple<int, int>(newNode.X, newNode.Y), newNode);
+                return newNode;
             }
-        }
-
-        public int GetHashCode(Node node)
-        {
-            return node.X.GetHashCode() ^ node.Y.GetHashCode();
         }
     }
 

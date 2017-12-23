@@ -1,0 +1,73 @@
+set b 79        //   b = 79
+set c b         //   c = b
+jnz a 2         //   IF NOT DEBUG, GOTO Line 5
+jnz 1 5         //   ELSE GOTO line 9
+mul b 100       //5  b *= 100
+sub b -100000   //   b += 100000
+set c b         //   c = b
+sub c -17000    //   c += 17000
+set f 1         //9  f = 1
+set d 2         //   d = 2
+set e 2         //11 e = 2
+set g d         //12 g = d
+mul g e         //   g *= e
+sub g b         //   g -= b
+jnz g 2         //   IF g != 0 GOTO LINE 17
+set f 0         //   ELSE f = 0
+sub e -1        //17 e++
+set g e         //   g = e
+sub g b         //   g -= b
+jnz g -8        //   IF G != 0, GOTO LINE 12
+sub d -1        //   ELSE d++
+set g d         //   g = d
+sub g b         //   g -= b
+jnz g -13       //   IF g != 0, GOTO LINE 11
+jnz f 2         //   ELSE IF f != 0, GOTO LINE 27
+sub h -1        //   ELSE Increment h
+set g b         //27 g = b
+sub g c         //   g -= c
+jnz g 2         //   IF G != 0, GOTO LINE 31
+jnz 1 3         //   ELSE EXIT
+sub b -17       //31 b += 17
+jnz 1 -23       //   GOTO LINE 9
+
+lines 5 to 8 seed b and c with large values, if in non-debug mode (a=1)
+b = 107900
+c = 124900
+else 
+b = 79
+c = 79
+
+lines 10 to 24 check if b is prime (using an inefficient approach) and sets the flag f
+Converted into csharp it would look like the following.
+
+for(int d = 2; d < b; d++)
+{
+	for(int e = 2; e < b; e++) 
+	{
+		if(e * d == b) 
+		{
+			f = 0;
+		}
+	}
+}
+
+lines 27 to 31 will exit the program when b is equal to c, and otherwise increment b by 17
+and start the prime checking process over again.
+
+The program can essentially be decomposed into the following
+
+int start = 79;
+int end = 79;
+if (a) {
+	start = 107900;
+	end = 107900;
+}
+
+for(int b = start; b <= end; b += 17) 
+{
+	if(!IsPrime(b)) 
+	{
+		h++;
+	}
+}

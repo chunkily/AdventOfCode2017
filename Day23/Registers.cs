@@ -119,7 +119,10 @@ namespace Day23
                             }
                             else
                             {
-                                instructions.Add(() => JumpNZ(xNum, GetValue(yChar)));
+                                if(xNum != 0)
+                                {
+                                    instructions.Add(() => Jump(GetValue(yChar)));
+                                }
                             }
                         }
                         else
@@ -130,7 +133,10 @@ namespace Day23
                             }
                             else
                             {
-                                instructions.Add(() => JumpNZ(xNum, yNum));
+                                if(xNum != 0)
+                                {
+                                    instructions.Add(() => Jump(yNum));
+                                }
                             }
                         }
                         break;
@@ -192,6 +198,11 @@ namespace Day23
             {
                 currentLine = currentLine + (int)y - 1;
             }
+        }
+
+        public void Jump(long y)
+        {
+            currentLine = currentLine + (int)y - 1;
         }
     }
 }

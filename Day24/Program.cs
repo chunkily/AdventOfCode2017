@@ -50,12 +50,21 @@ namespace Day24
                 {
                     nextList.AddRange(bridge.GetBranches());
                 }
-                bridges.Add(nextList);
+                if(nextList.Count > 0)
+                {
+                    bridges.Add(nextList);
+                }
             }
             while (nextList.Count > 0);
 
-            int max = bridges.SelectMany(bs => bs.Select(b => b.GetTotalStrength())).Max();
+            var allBridges = bridges.SelectMany(bs => bs);
+            int max = allBridges.Max(b => b.GetTotalStrength());
+
+            var longestBridges = bridges.Last();
+            int max2 = longestBridges.Max(b => b.GetTotalStrength());
+
             Console.WriteLine("Strongest bridge has strength of: " + max);
+            Console.WriteLine("Longest, strongest bridge has strength of: " + max2);
         }
     }
 

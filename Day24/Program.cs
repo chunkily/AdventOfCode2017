@@ -103,9 +103,8 @@ namespace Day24
             }
         }
 
-        public List<Bridge> GetBranches()
+        public IEnumerable<Bridge> GetBranches()
         {
-            List<Bridge> nextList = new List<Bridge>();
             foreach(var component in remainingComponents)
             {
                 var next = new Bridge(
@@ -115,10 +114,9 @@ namespace Day24
 
                 if(next.TryAttach(component))
                 {
-                    nextList.Add(next);
+                    yield return next;
                 }
             }
-            return nextList;
         }
 
         public int GetTotalStrength()
